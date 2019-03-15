@@ -1,63 +1,63 @@
-import * as React from "react";
+import * as React from 'react'
 
-import {forwardRef, memo, useEffect, useMemo, useState} from "react";
+import {forwardRef, memo, useEffect, useMemo, useState} from 'react'
 
-import {observable, Reaction} from "mobx";
-import {isUsingStaticRendering} from "./staticRendering";
-import {useObserver} from "./useObserver";
+import {observable, Reaction} from 'mobx'
+import {isUsingStaticRendering} from './staticRendering'
+import {useObserver} from './useObserver'
 
 export interface ObserverOptions {
-    readonly forwardRef?: boolean;
+    readonly forwardRef?: boolean
 }
 
 export function observer<P extends object, TRef= {}>(baseComponent: React.RefForwardingComponent<TRef, P>, options: ObserverOptions)
-    : React.MemoExoticComponent<React.ForwardRefExoticComponent<React.PropsWithoutRef<P> & React.RefAttributes<TRef>>>;
+    : React.MemoExoticComponent<React.ForwardRefExoticComponent<React.PropsWithoutRef<P> & React.RefAttributes<TRef>>>
 
 export function observer<P extends object>(
     baseComponent: React.FunctionComponent<P>,
     options?: ObserverOptions
-): React.FunctionComponent<P>;
+): React.FunctionComponent<P>
 
 export function observer<P extends object, TRef = {}>(
     baseComponent: React.RefForwardingComponent<TRef, P>,
     options?: ObserverOptions
 ) {
-    // The working of observer is explaind step by step in this talk: https://www.youtube.com/watch?v=cPF4iBedoF0&feature=youtu.be&t=1307
+    // The working of observer is explained step by step in this talk: https://www.youtube.com/watch?v=cPF4iBedoF0&feature=youtu.be&t=1307
     if (isUsingStaticRendering()) {
-        return baseComponent;
+        return baseComponent
     }
 
     const realOptions = {
         forwardRef: false,
         ...options,
-    };
+    }
 
-    const baseComponentName = baseComponent.displayName || baseComponent.name;
+    const baseComponentName = baseComponent.displayName || baseComponent.name
 
     const wrappedComponent = (props: P, ref: React.Ref<TRef>) => {
-        return useObserver(() => baseComponent(props, ref), baseComponentName);
-    };
+        return useObserver(() => baseComponent(props, ref), baseComponentName)
+    }
 
-    // memo; we are not intested in deep updates
+    // memo; we are not interested in deep updates
     // in props; we assume that if deep objects are changed,
     // this is in observables, which would have been tracked anyway
-    let memoComponent;
+    let memoComponent
     if (realOptions.forwardRef) {
         // we have to use forwardRef here because:
         // 1. it cannot go before memo, only after it
         // 2. forwardRef converts the function into an actual component, so we can't let the baseComponent do it
         //    since it wouldn't be a callable function anymore
-        memoComponent = memo(forwardRef(wrappedComponent));
+        memoComponent = memo(forwardRef(wrappedComponent))
     } else {
-        memoComponent = memo(wrappedComponent);
+        memoComponent = memo(wrappedComponent)
     }
 
-    memoComponent.displayName = baseComponentName;
-    return memoComponent;
+    memoComponent.displayName = baseComponentName
+    return memoComponent
 }
 /*
 {
-    // memo; we are not intested in deep updates
+    // memo; we are not interested in deep updates
     // in props; we assume that if deep objects are changed,
     // this is in observables, which would have been tracked anyway
     return memo(props => {
