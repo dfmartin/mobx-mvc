@@ -1,9 +1,9 @@
 import * as React from 'react'
 
-export const JobContainer = () => {
+export const JobLead = () => {
     return (
         <div>
-            Job container
+            Job Lead
         </div>
     )
 }
