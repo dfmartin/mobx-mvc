@@ -3,6 +3,8 @@ import { History, createBrowserHistory, Location } from 'history'
 import { JobStore } from './features/jobs/job.store'
 import { LeadStore } from './features/leads/lead.store'
 
+import { appHistory } from './appHistory'
+
 export class RootStore {
     private _jobStore: JobStore
     private _leadStore: LeadStore
@@ -11,7 +13,7 @@ export class RootStore {
     private _listener: any
 
     constructor () {
-        this._history = createBrowserHistory({ basename: '' })
+        this._history = appHistory
         this._jobStore = new JobStore()
         this._leadStore = new LeadStore()
 
