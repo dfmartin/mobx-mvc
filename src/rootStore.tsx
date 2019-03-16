@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { observable, computed, action, flow } from 'mobx'
 import { History, createBrowserHistory, Location } from 'history'
-import { StoreContext } from './hooks/mobx'
 import { JobStore } from './features/jobs/job.store'
 import { LeadStore } from './features/leads/lead.store'
 import { JobContainer } from './features/jobs/job.container'
@@ -35,8 +34,9 @@ export class RootStore {
     private _history: History
     @observable location: Location<any>
     @observable private _listener: any
+    @observable private _currentView: React.ReactNode
 
-    constructor() {
+    constructor () {
         this._history = appHistory
         this.jobStore = new JobStore()
         this.leadStore = new LeadStore()
@@ -44,6 +44,7 @@ export class RootStore {
         this._listener = this._history.listen(this.historyListener)
         this.historyListener(this._history.location)
     }
+
     @observable jobStore: JobStore
     @observable leadStore: LeadStore
 
@@ -51,20 +52,27 @@ export class RootStore {
         if (this.location && location.pathname === this.location.pathname && location.search === this.location.search) return;
         console.log(location)
         this.location = location
+        this.updateCurrentView()
     }
 
-    @action getCurrentView(): React.ReactNode {
+    @action updateCurrentView = () => {
         const location = this.location;
         const base = location.pathname.split('/').slice(1)[0]
         switch (base) {
             case 'jobs':
-                return this.jobStore.activate(location)
+                this._currentView = this.jobStore.activate(location)
+                break
 
             case 'leads':
-                return this.leadStore.activate(location)
+                this._currentView = this.leadStore.activate(location)
+                break
 
             default:
                 return null
         }
+    }
+
+    @computed get currentView() {
+        return this._currentView
     }
 }

@@ -1,15 +1,9 @@
 import * as React from 'react'
-import { StoreContext } from './storeContext'
-import { array } from 'prop-types';
 
-export const useStore = (storeName: string[]) => {
-    const c = React.useContext(StoreContext);
-    const result = []
-    storeName.forEach(s => {
-        if (c[s] !== undefined) {
-            result.push(c[s])
-        }
-    })
+import { IStoreContext, Context } from './storeContext';
 
-    return result
+export const useStore = <K extends keyof IStoreContext>(storeName: K): IStoreContext[K] => {
+    const context = React.useContext(Context)
+    const result = context[storeName]
+    return result;
 }

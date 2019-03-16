@@ -3,20 +3,16 @@ import { LeadStore } from './lead.store'
 import { observer, useStore } from '../../hooks/mobx';
 
 export const leadContainer = (props: { store?: LeadStore }) => {
-    const [store] = useStore(["leadStore"])
-    //const {
-    //    store
-    //} = props;
+    const store: LeadStore = useStore("leadStore")
+
     const view = store.currentView;
     return (
-        <div>
+        <>
             Lead Container
-            <div>
                 child view:
                 <br />
-                {view}
-            </div>
-        </div>
+            {view}
+        </>
     )
 }
 

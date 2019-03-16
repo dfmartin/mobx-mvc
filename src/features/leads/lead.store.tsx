@@ -1,15 +1,18 @@
 import * as React from 'react'
-import { observable, computed, action, flow } from 'mobx'
-import { History, createBrowserHistory, Location } from 'history'
+import { observable, computed, action } from 'mobx'
+import { Location } from 'history'
 
-import { Lead, LeadJob, LeadContainer, LeadSearch } from './'
+import { Lead, LeadContainer, LeadSearch } from './'
 export class LeadStore {
-    @observable _currentView: React.ReactNode
-    @observable _location: Location
-    @observable lead: { firstName: string, lastName: string }
+    @observable private _currentView: React.ReactNode
+    @observable private _location: Location
+    @observable lead: { firstName: string, lastName: string, status: "candidate" | "recommendation" }
     @observable job: { name: string, status: boolean }
 
-    constructor() {
+    @observable ui: {
+        selectedTab: string
+    }
+    constructor () {
         console.log('lead store created')
     }
 
@@ -18,14 +21,14 @@ export class LeadStore {
         if (parts.length === 1) {
             this.lead = undefined
             this.job = undefined
-            return <LeadSearch />
             this._currentView = <LeadSearch />
         }
         else {
             const leadId = parseInt(parts[1])
             this.lead = {
                 firstName: 'lead#: ' + leadId,
-                lastName: 'Washington'
+                lastName: 'Washington',
+                status: leadId % 2 > 0 ? "candidate" : "recommendation"
             }
 
             if (parts.length === 3) {
@@ -33,19 +36,19 @@ export class LeadStore {
                 this.job = {
                     name: 'job#: ' + jobId,
                     status: jobId % 2 > 0
+
                 }
             }
             else {
                 this.job = undefined
             }
-            return <Lead />
             this._currentView = <Lead />
         }
     }
 
     @action activate = (location: Location) => {
         this._location = location
-        this._currentView = this.setCurrentView();
+        this.setCurrentView();
         return <LeadContainer />
     }
 

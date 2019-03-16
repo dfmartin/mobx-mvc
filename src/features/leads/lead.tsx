@@ -1,23 +1,21 @@
 import * as React from 'react'
 
 import { observer, useStore } from '../../hooks/mobx'
-import { LeadStore } from './lead.store'
 import { LeadJob } from './'
 
-interface LeadProps {
-    leadStore: LeadStore
-}
-
 const _lead = () => {
-    const [store] = useStore(["leadStore"])
+    const leadStore = useStore("leadStore")
 
 
     return (
-        <div>
-            Lead
-            name: {store.lead.firstName}
+        <div style={{ display: "flex" }}>
             <div>
-                {store.job && (
+                Lead
+                name: {leadStore.lead.firstName}
+                status: {leadStore.lead.status}
+            </div>
+            <div>
+                {leadStore.job && (
                     <LeadJob />
                 )}
             </div>

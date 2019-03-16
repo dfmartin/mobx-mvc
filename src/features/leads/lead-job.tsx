@@ -1,8 +1,9 @@
 import * as React from 'react'
 import { useStore } from '../../hooks/mobx';
+import { LeadStore } from '.';
 
 export const LeadJob = () => {
-    const [store] = useStore(["leadStore"])
+    const store: LeadStore = useStore("leadStore")
 
     return (
         <div>
