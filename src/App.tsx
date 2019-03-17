@@ -71,7 +71,8 @@ export const _app = () => {
                     Edit <code>src/App.tsx</code> and save to reload.
                     </p>
                 <div style={{ display: "flex" }}>
-                    <button style={style} onClick={() => handleClick('/jobs/2')}>jobs</button>
+                    <   button style={style} onClick={() => handleClick('/jobs')}>job search</button>
+                    <button style={style} onClick={() => handleClick('/jobs/2')}>job 2</button>
                     <button style={style} onClick={() => handleClick('/leads')}>leads</button>
                     <button style={style} onClick={() => handleClick('/leads/2')}>leads #2</button>
                     <button style={style} onClick={() => handleClick('/leads/1')}>leads #1</button>

@@ -1,14 +1,21 @@
 import * as React from 'react'
 import { useStore } from '../../hooks/mobx';
 import { LeadStore } from '.';
+import { JobStore } from '../jobs';
 
 export const LeadJob = () => {
-    const store: LeadStore = useStore("leadStore")
+    const leadStore: LeadStore = useStore("leadStore")
+    const jobStore = useStore("jobStore")
 
+    const goToJobDetails = () => {
+        const jobId = leadStore.job.id
+        jobStore.goToJob(jobId)
+    }
     return (
         <div>
             Lead Job
-            name: {store.job.name}
+            name: {leadStore.job.name}
+            <button onClick={goToJobDetails}>go to job details</button>
         </div>
     )
 }

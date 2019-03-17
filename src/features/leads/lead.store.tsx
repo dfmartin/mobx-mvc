@@ -16,23 +16,22 @@ class AbortManager {
         this.abortController.abort();
     }
 
-    constructor (location: Location) {
+    constructor(location: Location) {
         this.location = location
         this.abortController = new AbortController()
     }
 }
 export class LeadStore {
-    private abortController: AbortController = new AbortController()
     private abortManager: AbortManager
     @observable private _currentView: React.ReactNode
     @observable private _location: Location
     @observable lead: { firstName: string, lastName: string, status: "candidate" | "recommendation" }
-    @observable job: { name: string, status: boolean }
+    @observable job: { name: string, status: boolean, id: number }
 
     @observable ui: {
         selectedTab: string
     }
-    constructor () {
+    constructor() {
         console.log('lead store created')
     }
 
@@ -58,7 +57,7 @@ export class LeadStore {
 
     @action private setCurrentView = async (location: Location) => {
         const signal = this.getAbortSignal(location)
-        await sleep(2000)
+        await sleep(5000)
         if (signal.aborted) {
             return Promise.reject('=======> signal aborted')
         };
@@ -82,8 +81,8 @@ export class LeadStore {
                 const jobId = parseInt(parts[2])
                 this.job = {
                     name: 'job#: ' + jobId,
-                    status: jobId % 2 > 0
-
+                    status: jobId % 2 > 0,
+                    id: jobId,
                 }
             }
             else {

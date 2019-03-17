@@ -36,7 +36,7 @@ export class RootStore {
     @observable private _listener: any
     @observable private _currentView: React.ReactNode
 
-    constructor () {
+    constructor() {
         this._history = appHistory
         this.jobStore = new JobStore()
         this.leadStore = new LeadStore()
@@ -50,7 +50,7 @@ export class RootStore {
 
     @action private historyListener = async (location: Location<any>) => {
         console.log(`${location.pathname} r0. location requested: `, location)
-        //if (this.location && location.pathname === this.location.pathname && location.search === this.location.search) return;
+        if (this.location && location.pathname === this.location.pathname && location.search === this.location.search) return;
         console.log(`${location.pathname} r1. new location updating current view: `)
         const { location: newLoc, view } = await this.updateCurrentView(location)
         this.location = newLoc
@@ -69,7 +69,7 @@ export class RootStore {
 
         switch (base) {
             case 'jobs':
-                view = this.jobStore.activate(location)
+                view = await this.jobStore.activate(location)
                 break
 
             case 'leads':
