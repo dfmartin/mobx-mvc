@@ -38,6 +38,7 @@ At a high level:
 
 ## about the demo
 * written in TypeScript
+* messy code - for now
 * simulates a 2 second load time for each url along with an abort.  The goal here was to make sure the UI did not block and that multiple URLs could be pushed in rapid succession.
 * the URL has the following patterns:
   * `/jobs` - jobs search
