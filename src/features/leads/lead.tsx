@@ -6,21 +6,22 @@ import { LeadJob } from './'
 const _lead = () => {
     const leadStore = useStore("leadStore")
 
+    const { lead, job } = leadStore
 
-    return (
+    return !!lead ? (
         <div style={{ display: "flex" }}>
             <div>
                 Lead
-                name: {leadStore.lead.firstName}
-                status: {leadStore.lead.status}
+                name: {lead.firstName}
+                status: {lead.status}
             </div>
             <div>
-                {leadStore.job && (
+                {job && (
                     <LeadJob />
                 )}
             </div>
         </div>
-    )
+    ) : null
 }
 
 export const Lead = observer(_lead)
