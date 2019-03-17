@@ -1,44 +1,66 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# mobx-mvc
+example of using [mobx](https://github.com/mobxjs/mobx) stores as controllers for a React app.
 
-## Available Scripts
+    yarn install
+    yarn start
 
-In the project directory, you can run:
+Once the app is running you will see a number of buttons.  Each one pushes a URL using [history from ReactTraining](https://github.com/ReactTraining/history).
 
-### `npm start`
+> side note.  This demo makes use of [react Hooks](https://reactjs.org/docs/hooks-intro.html). Including for the stores.  No need for inject HOC from mobx.
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## why?
+An app that runs off of the URL can be difficult to manage.  Who sets the URL?  Who interpets the URL?  When does any of that take place?
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+The goal of this demo is to present an example of an application that manages all state and navigation via mobx stores.
+1. Let the store receive the URL
+2. parse it
+3. load data based on URL
+4. determine the correct view
+5. update the UI
 
-### `npm test`
+Also wanted to make it work with multiple stores.
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## how?
+At a high level:
+### the stores
+* three stores - root, lead store, job store
+* root store listens to `history.listen`.  It uses the first part of the URL to determine which child store will be used.  It then calls `activate(location)` on the appropriate child store.
+* child store proceeds to use the rest of the URL to determine which child view to use.  It also loads any data that view will need.
+* the root has a property `currentView` which returns a `ReactNode` from the child `activate` call.
+* the child store also exposes a property `currentView` which returns any child view.
+* the child store will return its `<Container />` from the the `activate` call.  This will be used by the root store.
+* I supposed this pattern could be followed down multiple levels of stores.
 
-### `npm run build`
+### the views
+* `App.tsx` is the shell and uses the root store's `currentView` as the base content.
+* `<Container />` will access the store's `currentView` property to show the child views.
+* `_childView_.tsx` will access the store for its data.
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## about the demo
+* written in TypeScript
+* simulates a 2 second load time for each url along with an abort.  The goal here was to make sure the UI did not block and that multiple URLs could be pushed in rapid succession.
+* the URL has the following patterns:
+  * `/jobs` - jobs search
+  * `/jobs/:jobId` - job details for jobId
+  * `/leads` - lead search
+  * `/leads/:leadId' - lead details for leadId
+  * `/leads/:leadId/:jobId` - lead details for leadId along with some details about jobId.  There will be a button to take you to `/jobs/:jobId`
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+At this point there is no actual data behind the scenes. This means you can use any ids in the URL.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+##  extras
+### hooks
+I created a hook to access mobx stores.  Right now it is rather specific to this project.  It is used like:
 
-### `npm run eject`
+```ts
+const jobStore = useStore('jobStore')
+```
+this return a typed store and the `useStore` constrains the argument passed to ensure it is a valid store.  E.g. you cannot call `useStore('someRandomString')`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+I liberally copied some observer code from the [mobx-lite project](https://github.com/mobxjs/mobx-react-lite).  I wanted dependencies only on traditional mobx and mobx-react packages.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## future
+* isBusy functionality
+* I would like to create some data/services and hook it up to be retrieved in the stores.  I don't have a desire at this time to make actual `fetch` calls.
+* some styling.  Likely from [material-ui](https://material-ui.com/)
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).

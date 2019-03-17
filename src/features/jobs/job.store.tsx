@@ -63,7 +63,7 @@ export class JobStore {
 
     private setCurrentView = async (location: Location) => {
         const signal = this.getAbortSignal(location)
-        await sleep(5000)
+        await sleep(2000)
         if (signal.aborted) {
             return Promise.reject('=======> signal aborted')
         };
