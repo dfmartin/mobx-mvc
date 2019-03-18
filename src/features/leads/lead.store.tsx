@@ -25,7 +25,7 @@ export class LeadStore {
     private abortManager: AbortManager
     @observable private _currentView: React.ReactNode
     @observable private _location: Location
-    @observable lead: { firstName: string, lastName: string, status: "candidate" | "recommendation" }
+    @observable lead: { firstName: string, lastName: string, status: 'candidate' | 'recommendation' }
     @observable job: { name: string, status: boolean, id: number }
 
     @observable ui: {
@@ -74,7 +74,7 @@ export class LeadStore {
             this.lead = {
                 firstName: 'lead#: ' + leadId,
                 lastName: 'Washington',
-                status: leadId % 2 > 0 ? "candidate" : "recommendation"
+                status: leadId % 2 > 0 ? 'candidate' : 'recommendation'
             }
 
             if (parts.length === 3) {

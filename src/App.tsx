@@ -1,6 +1,4 @@
-import * as React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import * as React from 'react'
 
 import { appHistory } from './appHistory'
 import { observer, useStore, } from './hooks/mobx'
@@ -39,7 +37,7 @@ const handleKeyPress = (e) => {
             break
 
         default:
-            path = 'leads'
+            return
     }
 
     if (!!path) {
@@ -57,7 +55,7 @@ const handleBunches = () => {
 }
 export const _app = () => {
     window.onkeydown = handleKeyPress
-    const root = useStore("rootStore")
+    const root = useStore('rootStore')
     const placeholder = root.location
     //console.log('a1. root current view requested')
     const view = root.currentView
@@ -65,28 +63,22 @@ export const _app = () => {
 
     return (
         <div className='App' onKeyDown={handleKeyPress}>
-            <header className='App-header'>
-                <img src={logo} className='App-logo' alt='logo' />
-                <p>
-                    Edit <code>src/App.tsx</code> and save to reload.
-                    </p>
-                <div style={{ display: "flex" }}>
-                    <   button style={style} onClick={() => handleClick('/jobs')}>job search</button>
-                    <button style={style} onClick={() => handleClick('/jobs/2')}>job 2</button>
-                    <button style={style} onClick={() => handleClick('/leads')}>leads</button>
-                    <button style={style} onClick={() => handleClick('/leads/2')}>leads #2</button>
-                    <button style={style} onClick={() => handleClick('/leads/1')}>leads #1</button>
-                    <button style={style} onClick={() => handleClick('/leads/2/3')}>leads #2 job #3</button>
-                    <button style={style} onClick={() => handleBunches()}>bunches</button>
+            <div style={{ display: 'flex' }}>
+                <   button style={style} onClick={() => handleClick('/jobs')}>job search</button>
+                <button style={style} onClick={() => handleClick('/jobs/2')}>job 2</button>
+                <button style={style} onClick={() => handleClick('/leads')}>leads</button>
+                <button style={style} onClick={() => handleClick('/leads/2')}>leads #2</button>
+                <button style={style} onClick={() => handleClick('/leads/1')}>leads #1</button>
+                <button style={style} onClick={() => handleClick('/leads/2/3')}>leads #2 job #3</button>
+                <button style={style} onClick={() => handleBunches()}>bunches</button>
 
-                </div>
+            </div>
 
-                <div style={{ border: '1px solid blue' }}>
-                    {view}
-                </div>
-            </header>
+            <div style={{ border: '1px solid blue' }}>
+                {view}
+            </div>
         </div>
-    );
+    )
 }
 
 export const App = observer(_app)

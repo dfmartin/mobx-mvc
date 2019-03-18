@@ -1,11 +1,10 @@
 import * as React from 'react'
-import { useStore } from '../../hooks/mobx';
-import { LeadStore } from '.';
-import { JobStore } from '../jobs';
+import { useStore } from '../../hooks/mobx'
+import { LeadStore } from '.'
 
 export const LeadJob = () => {
-    const leadStore: LeadStore = useStore("leadStore")
-    const jobStore = useStore("jobStore")
+    const leadStore: LeadStore = useStore('leadStore')
+    const jobStore = useStore('jobStore')
 
     const goToJobDetails = () => {
         const jobId = leadStore.job.id
