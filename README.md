@@ -62,6 +62,7 @@ I liberally copied some observer code from the [mobx-lite project](https://githu
 
 ## future
 * isBusy functionality
+* route matching/parsing e.g `/leads/:leadId/jobs/:jobId` or perhaps `/leads/{leadId}/jobs/{jobId}`
 * I would like to create some data/services and hook it up to be retrieved in the stores.  I don't have a desire at this time to make actual `fetch` calls.
 * some styling.  Likely from [material-ui](https://material-ui.com/)
 
