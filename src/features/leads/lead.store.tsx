@@ -12,8 +12,7 @@ class AbortManager {
     location: Location
     abortController: AbortController
     abort = () => {
-        console.log(`${this.location.pathname} ======> aborting location: `)
-        this.abortController.abort();
+        this.abortController.abort()
     }
 
     constructor(location: Location) {
@@ -31,9 +30,6 @@ export class LeadStore {
     @observable ui: {
         selectedTab: string
     }
-    constructor() {
-        console.log('lead store created')
-    }
 
     private getAbortSignal = (location: Location): AbortSignal => {
         this.completeSignal()
@@ -49,10 +45,22 @@ export class LeadStore {
     }
 
     private endSignal = () => {
-        if (this.abortManager) {
-            console.log(`${this.abortManager.location.pathname} ending manager: `)
-        }
         this.abortManager = null
+    }
+
+    private getParts = (location: Location) => {
+        const parts = location.pathname.split('/').slice(1)
+        const path = '/leads/:leadId/:jobId'
+        const result = {}
+        const match = path.match(/(\/:?[a-z0-9]+)/gmi)
+        match.forEach(m => {
+            if (!m.startsWith('/:')) return
+            const i = match.indexOf(m)
+            const varName = m.substring(2)
+            result[varName] = parts[i]
+        })
+
+        return result
     }
 
     @action private setCurrentView = async (location: Location) => {
@@ -60,9 +68,10 @@ export class LeadStore {
         await sleep(2000)
         if (signal.aborted) {
             return Promise.reject('=======> signal aborted')
-        };
+        }
+        const p1 = this.getParts(location)
 
-        const parts = location.pathname.split('/').slice(1);
+        const parts = location.pathname.split('/').slice(1)
         let view: React.ReactNode
         if (parts.length === 1) {
             this.lead = undefined
@@ -109,10 +118,10 @@ export class LeadStore {
     }
 
     @action getCurrentView = () => {
-        return this._currentView;
+        return this._currentView
     }
 
     @computed get currentView(): React.ReactNode {
-        return this._currentView;
+        return this._currentView
     }
 }

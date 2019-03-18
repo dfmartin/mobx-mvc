@@ -49,47 +49,38 @@ export class RootStore {
     @observable leadStore: LeadStore
 
     @action private historyListener = async (location: Location<any>) => {
-        console.log(`${location.pathname} r0. location requested: `, location)
         if (this.location && location.pathname === this.location.pathname && location.search === this.location.search) return;
-        console.log(`${location.pathname} r1. new location updating current view: `)
         const { location: newLoc, view } = await this.updateCurrentView(location)
         this.location = newLoc
         if (!!view) {
-            console.log(`${location.pathname} r4.1. this._currentView updated for `)
             this._currentView = view
         }
-        else {
-            console.log(`${location.pathname} r4.2. =======> no view returned for `)
+    }
+
+    private get paths() {
+        return {
+            jobs: this.jobStore,
+            leads: this.leadStore,
         }
     }
 
     @action updateCurrentView = async (location: Location) => {
-        const base = location.pathname.split('/').slice(1)[0]
+        let base = location.pathname.split('/').slice(1)[0].replace(/\/+$/, '')
+        location.pathname = location.pathname.replace(/\/+$/, '')
+
         let view: React.ReactNode
 
-        switch (base) {
-            case 'jobs':
-                view = await this.jobStore.activate(location)
-                break
+        const store = this.paths[base];
 
-            case 'leads':
-                view = await this.leadStore.activate(location)
-                break
-
-            default:
-                view = null
+        if (store) {
+            view = await store.activate(location)
         }
+        else { view = null }
 
         return { location, view }
     }
 
     @computed get currentView() {
-        if (this.location) {
-            console.log(`${this.location.pathname} r5.1. current view returned for `)
-        }
-        else {
-            console.log(`r5.2current view returned with no location.  ${!!this._currentView ? 'no current view' : 'somehow there is a current view'}`)
-        }
         return this._currentView
     }
 }

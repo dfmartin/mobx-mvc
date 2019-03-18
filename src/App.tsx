@@ -10,7 +10,6 @@ const style = {
 }
 
 const handleClick = (path: string) => {
-    console.log(`****** button clicked: ${path}`)
     appHistory.push(path)
 }
 const handleKeyPress = (e) => {
@@ -48,7 +47,6 @@ const handleBunches = () => {
     const paths = [
         'leads', `leads/2`, 'leads/1', 'leads/2/3', 'leads/2', 'leads', 'leads/2/3', 'leads/1'
     ]
-    console.log(`****** beginning bunches ******`)
     paths.forEach(p => {
         appHistory.push('/' + p)
     })
